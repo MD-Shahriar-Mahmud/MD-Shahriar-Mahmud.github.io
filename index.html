@@ -2,13 +2,84 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Welcome</title>
+  <title>Private Personal Site</title>
 </head>
+
 <body>
-  <h1>Hello 👋</h1>
-  <p>
-    This is my personal website.<br>
-    If you can see this, GitHub Pages is working.
-  </p>
+
+  <!-- PUBLIC INFO SECTION -->
+  <div id="public">
+    <h1>Welcome 👋</h1>
+
+    <p>
+      This is a personal website created for fun and for friends & family.
+    </p>
+
+    <p>
+      Some parts of this site are private and require login.
+    </p>
+
+    <button onclick="showLogin()">Login</button>
+  </div>
+
+  <!-- LOGIN SECTION -->
+  <div id="login" style="display:none;">
+    <h2>Login</h2>
+
+    <p>Please enter your email to continue.</p>
+
+    <input type="email" id="email" placeholder="Enter your email" />
+    <br><br>
+
+    <button onclick="fakeLogin()">Send Login Code</button>
+    <br><br>
+
+    <button onclick="goBack()">← Back</button>
+
+    <p id="login-message"></p>
+  </div>
+
+  <!-- PRIVATE CONTENT SECTION -->
+  <div id="content" style="display:none;">
+    <h1>Private Area 🔒</h1>
+
+    <p>
+      You are logged in.<br>
+      This content is only visible to approved users.
+    </p>
+
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    function showLogin() {
+      document.getElementById("public").style.display = "none";
+      document.getElementById("login").style.display = "block";
+    }
+
+    function goBack() {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("public").style.display = "block";
+    }
+
+    function fakeLogin() {
+      const email = document.getElementById("email").value;
+
+      document.getElementById("login-message").innerText =
+        "If this were real, an OTP would be sent to " + email;
+
+      // TEMP: simulate successful login
+      document.getElementById("login").style.display = "none";
+      document.getElementById("content").style.display = "block";
+    }
+
+    function logout() {
+      document.getElementById("content").style.display = "none";
+      document.getElementById("public").style.display = "block";
+      document.getElementById("email").value = "";
+      document.getElementById("login-message").innerText = "";
+    }
+  </script>
+
 </body>
 </html>
