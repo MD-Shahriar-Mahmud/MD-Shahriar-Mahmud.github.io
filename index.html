@@ -201,7 +201,10 @@
     
       <div class="page">
         <h1>Welcome!</h1>
-        <p>You’re logged in. Private content will appear here.</p>
+        <p>You’re logged in. Group content will appear here.</p>
+        <button id="accountBtn" class="btn secondary">
+          View My Account
+        </button>
     
         <!-- You will add private content here later -->
         <div class="contentBlock">
@@ -210,7 +213,26 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ACCOUNT PAGE -->
+  <div id="account" style="display:none;">
+    <div class="header">
+      <div class="brand">My Account</div>
+      <button id="backToPrivateBtn" class="navBtn">← Back</button>
+    </div>
   
+    <div class="page">
+      <h1>Account Information</h1>
+  
+      <div class="contentBlock">
+        <p><strong>Email:</strong> <span id="accEmail"></span></p>
+        <p><strong>User ID:</strong> <span id="accUid"></span></p>
+        <p><strong>Provider:</strong> <span id="accProvider"></span></p>
+        <p><strong>Account created:</strong> <span id="accCreated"></span></p>
+        <p><strong>Last login:</strong> <span id="accLastLogin"></span></p>
+      </div>
+    </div>
   </div>
 
   <script type="module">
@@ -263,11 +285,13 @@
     const elLogin = document.getElementById("login");
     const elContent = document.getElementById("content");
     const msg = document.getElementById("message");
+    const elAccount = document.getElementById("account");
 
     function show(section) {
       elPublic.style.display = section === "public" ? "block" : "none";
       elLogin.style.display = section === "login" ? "block" : "none";
       elContent.style.display = section === "content" ? "block" : "none";
+      elAccount.style.display = section === "account" ? "block" : "none";
       msg.textContent = "";
     }
 
@@ -349,6 +373,29 @@
         show("public");
       }
     });
+
+    /* ===============================
+       8) ACCOUNT PAGE
+       =============================== */
+    document.getElementById("accountBtn").onclick = () => {
+      const user = auth.currentUser;
+      if (!user) return;
+    
+      document.getElementById("accEmail").textContent = user.email || "—";
+      document.getElementById("accUid").textContent = user.uid;
+      document.getElementById("accProvider").textContent =
+        user.providerData.map(p => p.providerId).join(", ");
+      document.getElementById("accCreated").textContent =
+        new Date(user.metadata.creationTime).toLocaleString();
+      document.getElementById("accLastLogin").textContent =
+        new Date(user.metadata.lastSignInTime).toLocaleString();
+    
+      show("account");
+    };
+    
+    document.getElementById("backToPrivateBtn").onclick = () => {
+      show("content");
+    };
 
     document.getElementById("logoutBtn").onclick = async () => {
       await signOut(auth);
