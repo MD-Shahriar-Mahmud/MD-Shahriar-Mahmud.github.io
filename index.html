@@ -2,43 +2,141 @@
 <html>
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shahriar's Private Site</title>
+
+  <style>
+    /* -------- Base layout -------- */
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #e4e9f0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .card {
+      background: white;
+      width: 100%;
+      max-width: 420px;
+      padding: 28px 24px 32px;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+
+    h1, h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+    }
+
+    p {
+      margin: 8px 0 16px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    /* -------- Inputs & buttons -------- */
+    input[type="email"] {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      font-size: 1rem;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 8px;
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn.secondary {
+      background: #e5e7eb;
+      color: #111;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    #message {
+      margin-top: 12px;
+      font-size: 0.95rem;
+    }
+
+    /* -------- Tablet & up -------- */
+    @media (min-width: 768px) {
+      .card {
+        max-width: 480px;
+        padding: 32px 28px 36px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- PUBLIC INFO -->
-  <div id="public">
-    <h1>Welcome 👋</h1>
-    <p>This is a personal website for friends & family.</p>
-    <p>Some content is private and requires login.</p>
-    <button id="loginBtn">Login</button>
-  </div>
+  <div class="card">
 
-  <!-- LOGIN -->
-  <div id="login" style="display:none;">
-    <h2>Login</h2>
-    <p>Use Google or receive a login link by email.</p>
-
-    <button id="googleBtn">Continue with Google</button>
-    <br><br>
-
-    <input type="email" id="email" placeholder="Enter your email" />
-    <br><br>
-
-    <button id="sendLinkBtn">Send Login Link</button>
-    <br><br>
-
-    <button id="backBtn">← Back</button>
-
-    <p id="message"></p>
-  </div>
-
-  <!-- PRIVATE CONTENT -->
-  <div id="content" style="display:none;">
-    <h1>Private Area 🔒</h1>
-    <p>You are logged in. Welcome!</p>
-    <button id="logoutBtn">Logout</button>
+    <!-- PUBLIC INFO -->
+    <div id="public">
+      <h1>Welcome 👋</h1>
+      <p>This is a personal website for friends & family.</p>
+      <p>Some content is private and requires login.</p>
+      <button id="loginBtn" class="btn">Login</button>
+    </div>
+  
+    <!-- LOGIN -->
+    <div id="login" style="display:none;">
+      <h2>Login</h2>
+      <p>Use Google or receive a login link by email.</p>
+  
+      <button id="googleBtn" class="btn">Continue with Google</button>
+      <br><br>
+  
+      <input type="email" id="email" placeholder="Enter your email" />
+      <br><br>
+  
+      <button id="sendLinkBtn" class="btn">Send Login Link</button>
+      <br><br>
+  
+      <button id="backBtn" class="btn secondary">← Back</button>
+  
+      <p id="message"></p>
+    </div>
+  
+    <!-- PRIVATE CONTENT -->
+    <div id="content" style="display:none;">
+      <h1>Private Area 🔒</h1>
+      <p>You are logged in. Welcome!</p>
+      <button id="logoutBtn" class="btn secondary">Logout</button>
+    </div>
+  
   </div>
 
   <script type="module">
