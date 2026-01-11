@@ -1,85 +1,185 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Private Personal Site</title>
+  <meta charset="UTF-8" />
+  <title>Shahriar's Private Site</title>
 </head>
 
 <body>
 
-  <!-- PUBLIC INFO SECTION -->
+  <!-- PUBLIC INFO -->
   <div id="public">
     <h1>Welcome 👋</h1>
-
-    <p>
-      This is a personal website created for fun and for friends & family.
-    </p>
-
-    <p>
-      Some parts of this site are private and require login.
-    </p>
-
-    <button onclick="showLogin()">Login</button>
+    <p>This is a personal website for friends & family.</p>
+    <p>Some content is private and requires login.</p>
+    <button id="loginBtn">Login</button>
   </div>
 
-  <!-- LOGIN SECTION -->
+  <!-- LOGIN -->
   <div id="login" style="display:none;">
     <h2>Login</h2>
+    <p>Use Google or receive a login link by email.</p>
 
-    <p>Please enter your email to continue.</p>
+    <button id="googleBtn">Continue with Google</button>
+    <br><br>
 
     <input type="email" id="email" placeholder="Enter your email" />
     <br><br>
 
-    <button onclick="fakeLogin()">Send Login Code</button>
+    <button id="sendLinkBtn">Send Login Link</button>
     <br><br>
 
-    <button onclick="goBack()">← Back</button>
+    <button id="backBtn">← Back</button>
 
-    <p id="login-message"></p>
+    <p id="message"></p>
   </div>
 
-  <!-- PRIVATE CONTENT SECTION -->
+  <!-- PRIVATE CONTENT -->
   <div id="content" style="display:none;">
     <h1>Private Area 🔒</h1>
-
-    <p>
-      You are logged in.<br>
-      This content is only visible to approved users.
-    </p>
-
-    <button onclick="logout()">Logout</button>
+    <p>You are logged in. Welcome!</p>
+    <button id="logoutBtn">Logout</button>
   </div>
 
-  <script>
-    function showLogin() {
-      document.getElementById("public").style.display = "none";
-      document.getElementById("login").style.display = "block";
+  <script type="module">
+    /* ===============================
+       1) ALLOWED EMAILS (EDIT THIS)
+       =============================== */
+    const ALLOWED_EMAILS = new Set([
+      "prism.shahriar@gmail.com",
+      "msmahmud@iastate.edu",
+      // "prism.nadia@gmail.com"
+    ]);
+
+    /* ===============================
+       2) FIREBASE IMPORTS
+       =============================== */
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      sendSignInLinkToEmail,
+      isSignInWithEmailLink,
+      signInWithEmailLink,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+    /* ===============================
+       3) FIREBASE CONFIG (YOURS)
+       =============================== */
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPPNbdQDSBuVGsX3cGBS-LSuiv04BMlBk",
+      authDomain: "personal-private-site-a1442.firebaseapp.com",
+      projectId: "personal-private-site-a1442",
+      storageBucket: "personal-private-site-a1442.firebasestorage.app",
+      messagingSenderId: "504980056764",
+      appId: "1:504980056764:web:951b50e94b74620d507eb9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    /* ===============================
+       4) UI HELPERS
+       =============================== */
+    const elPublic = document.getElementById("public");
+    const elLogin = document.getElementById("login");
+    const elContent = document.getElementById("content");
+    const msg = document.getElementById("message");
+
+    function show(section) {
+      elPublic.style.display = section === "public" ? "block" : "none";
+      elLogin.style.display = section === "login" ? "block" : "none";
+      elContent.style.display = section === "content" ? "block" : "none";
+      msg.textContent = "";
     }
 
-    function goBack() {
-      document.getElementById("login").style.display = "none";
-      document.getElementById("public").style.display = "block";
+    document.getElementById("loginBtn").onclick = () => show("login");
+    document.getElementById("backBtn").onclick = () => show("public");
+
+    /* ===============================
+       5) GOOGLE SIGN-IN
+       =============================== */
+    document.getElementById("googleBtn").onclick = async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const email = (result.user.email || "").toLowerCase();
+
+        if (!ALLOWED_EMAILS.has(email)) {
+          await signOut(auth);
+          msg.textContent = "This Google account is not authorized.";
+          show("login");
+        }
+      } catch (e) {
+        msg.textContent = "Google sign-in failed.";
+      }
+    };
+
+    /* ===============================
+       6) EMAIL LINK SIGN-IN
+       =============================== */
+    document.getElementById("sendLinkBtn").onclick = async () => {
+      const email = document.getElementById("email").value.trim().toLowerCase();
+
+      if (!email) {
+        msg.textContent = "Please enter an email.";
+        return;
+      }
+      if (!ALLOWED_EMAILS.has(email)) {
+        msg.textContent = "This email is not authorized.";
+        return;
+      }
+
+      const actionCodeSettings = {
+        url: "https://md-shahriar-mahmud.github.io/",
+        handleCodeInApp: true
+      };
+
+      try {
+        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+        localStorage.setItem("emailForSignIn", email);
+        msg.textContent = "Login link sent. Check your email.";
+      } catch {
+        msg.textContent = "Failed to send login link.";
+      }
+    };
+
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      let email = localStorage.getItem("emailForSignIn");
+      if (!email) {
+        email = prompt("Confirm your email:");
+      }
+      if (email && ALLOWED_EMAILS.has(email.toLowerCase())) {
+        await signInWithEmailLink(auth, email, window.location.href);
+        localStorage.removeItem("emailForSignIn");
+        window.history.replaceState({}, document.title, "/");
+      }
     }
 
-    function fakeLogin() {
-      const email = document.getElementById("email").value;
+    /* ===============================
+       7) AUTH STATE + LOGOUT
+       =============================== */
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const email = (user.email || "").toLowerCase();
+        if (!ALLOWED_EMAILS.has(email)) {
+          await signOut(auth);
+          show("login");
+        } else {
+          show("content");
+        }
+      } else {
+        show("public");
+      }
+    });
 
-      document.getElementById("login-message").innerText =
-        "If this were real, an OTP would be sent to " + email;
-
-      // TEMP: simulate successful login
-      document.getElementById("login").style.display = "none";
-      document.getElementById("content").style.display = "block";
-    }
-
-    function logout() {
-      document.getElementById("content").style.display = "none";
-      document.getElementById("public").style.display = "block";
-      document.getElementById("email").value = "";
-      document.getElementById("login-message").innerText = "";
-    }
+    document.getElementById("logoutBtn").onclick = async () => {
+      await signOut(auth);
+      show("public");
+    };
   </script>
-
 </body>
 </html>
