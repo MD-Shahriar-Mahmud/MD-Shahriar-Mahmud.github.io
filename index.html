@@ -96,6 +96,52 @@
         font-size: 2rem;
       }
     }
+
+    /* Header bar */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    
+    .brand {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #111;
+    }
+    
+    .navBtn {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      background: white;
+      color: #111;
+      cursor: pointer;
+    }
+    
+    .navBtn:active {
+      transform: translateY(1px);
+    }
+    
+    /* Page content */
+    .page h1 {
+      margin-top: 0;
+    }
+    
+    .contentBlock {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .contentBlock h3 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+    }
   </style>
 </head>
 
@@ -105,10 +151,26 @@
 
     <!-- PUBLIC INFO -->
     <div id="public">
-      <h1>Welcome 👋</h1>
-      <p>This is a personal website for friends & family.</p>
-      <p>Some content is private and requires login.</p>
-      <button id="loginBtn" class="btn">Login</button>
+      <div class="header">
+        <div class="brand">Shahriar’s Private Site</div>
+        <button id="loginBtn" class="navBtn">Login</button>
+      </div>
+    
+      <div class="page">
+        <h1>Welcome 👋</h1>
+        <p>This is my personal space for friends & family.</p>
+    
+        <!-- You will add content here later -->
+        <div class="contentBlock">
+          <h3>Public content</h3>
+          <p>(Placeholder) You can add announcements, links, photos, notes, etc. here later.</p>
+        </div>
+    
+        <div class="contentBlock">
+          <h3>What’s inside (private)</h3>
+          <p>(Placeholder) Some content is available only after login.</p>
+        </div>
+      </div>
     </div>
   
     <!-- LOGIN -->
@@ -125,16 +187,28 @@
       <button id="sendLinkBtn" class="btn">Send Login Link</button>
       <br><br>
   
-      <button id="backBtn" class="btn secondary">← Back</button>
+      <button id="backBtn" class="navBtn">← Back</button>
   
       <p id="message"></p>
     </div>
   
     <!-- PRIVATE CONTENT -->
     <div id="content" style="display:none;">
-      <h1>Private Area 🔒</h1>
-      <p>You are logged in. Welcome!</p>
-      <button id="logoutBtn" class="btn secondary">Logout</button>
+      <div class="header">
+        <div class="brand">Private Area 🔒</div>
+        <button id="logoutBtn" class="navBtn">Logout</button>
+      </div>
+    
+      <div class="page">
+        <h1>Welcome!</h1>
+        <p>You’re logged in. Private content will appear here.</p>
+    
+        <!-- You will add private content here later -->
+        <div class="contentBlock">
+          <h3>Private content</h3>
+          <p>(Placeholder) Add your private notes, links, or anything else here later.</p>
+        </div>
+      </div>
     </div>
   
   </div>
